@@ -5,7 +5,7 @@ const Header = () => {
     <header className="bg-blue-600 text-white">
       <div className="container mx-auto flex flex-wrap justify-center sm:justify-between gap-x-5 items-center py-4 px-6">
         <h1 className="text-xl font-bold">
-          <a href="/">Doce Essencia Admin</a>
+          <Link href="/">Doce Essencia Admin</Link>
         </h1>
         <nav>
           <ul className="flex space-x-6">

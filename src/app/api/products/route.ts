@@ -128,8 +128,8 @@ export async function POST(request: Request) {
   }
 }
 
+export async function GET() {
 // Função GET (Buscar Todos os Produtos)
-export async function GET(request: Request) {
   try {
     // Buscar todos os produtos no banco de dados
     const products = await prisma.product.findMany();

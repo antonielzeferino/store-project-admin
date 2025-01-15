@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 
 const PromotionalProducts = () => {
   const [products, setProducts] = useState<ProductData[]>([]);
-  const [isLoading, setLoading] = useState<Boolean>(true);
+  const [isLoading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchPromotionalProducts = async () => {
