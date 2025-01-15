@@ -8,9 +8,7 @@ cloudinary.config({
   api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET,
 });
 
-// Interface para os dados do produto
 export interface ProductData {
-  url: string;
   id?: string;
   name: string;
   description: string;
@@ -23,13 +21,14 @@ export interface ProductData {
   quantity?: string;
   weight?: number;
   colors: string[];
+  imageUrl: string;
 }
 
 // Função POST (Criar ou Atualizar Produto)
 export async function POST(request: Request) {
   try {
     const {
-      url,
+      imageUrl,
       id,
       name,
       description,
@@ -44,7 +43,7 @@ export async function POST(request: Request) {
       colors,
     }: ProductData = await request.json();
 
-    if (!url) {
+    if (!imageUrl) {
       return NextResponse.json(
         { error: "URL da imagem é obrigatória" },
         { status: 400 }
@@ -85,7 +84,7 @@ export async function POST(request: Request) {
           quantity,
           weight,
           colors,
-          imageUrl: url,
+          imageUrl
         },
       });
 
@@ -105,7 +104,7 @@ export async function POST(request: Request) {
           quantity,
           weight,
           colors,
-          imageUrl: url,
+          imageUrl
         },
       });
 

@@ -1,65 +1,25 @@
-"use client"
+import PromotionalProducts from "@/components/PromotionalProducts";
 
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { ProductData } from "./api/upload/route";
-
-export default function Home() {
-  const [products, setProducts] = useState<ProductData[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get("/api/upload");
-        console.log(response.data);
-        setProducts(response.data);
-        setLoading(false);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.log('Error fetching products:', error.message);
-        } else {
-          console.log('Error ao buscar produtos:', error);
-        }
-        setLoading(false);
-      }
-    }
-
-    fetchProducts();
-  }, []);
-
+const Home = () => {
   return (
     <div>
-      Doce Essência
-      {loading ? (
-        <p>Carregando...</p>
-      ) : (
-        <ul className="m-5">
-          {products.length > 0 && products.map((product) => (
-            <li key={product.id}>
-              <ul>
-                <li key={product.name}>
-                  {product.name}
-                </li>
-                <li key={product.description}>
-                  {product.description}
-                </li>
-                <li key={product.price}>
-                  preço: {product.price}
-                </li>
-                <li key={product.discountPercentage}>
-                  desconto: {product.discountPercentage}
-                </li>
-                <li key={product.id}>
-                  preço com desconto: {product.discountPercentage && 
-                  (product.price - (product.discountPercentage /100) * product.price).toFixed(2)
-                }
-                </li>
-              </ul>
-            </li>
-          ))}
-        </ul>
-      )}
+      <main className="container py-4 px-2">
+        <div className="flex justify-center mb-8">
+          <a
+            href="/create-product"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition"
+          >
+            Adicionar Produtos
+          </a>
+        </div>
+
+        <h2 className="text-2xl font-bold text-center mb-6">
+          Produtos em Promoção
+        </h2>
+        <PromotionalProducts />
+      </main>
     </div>
   );
-}
+};
+
+export default Home;
