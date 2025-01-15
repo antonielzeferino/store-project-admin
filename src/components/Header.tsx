@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const Header = () => {
   return (
     <header className="bg-blue-600 text-white">
@@ -8,20 +10,20 @@ const Header = () => {
         <nav>
           <ul className="flex space-x-6">
             <li>
-              <a
+              <Link
                 href="/"
                 className="hover:underline hover:text-yellow-300 transition-colors"
               >
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="/create-product"
                 className="hover:underline hover:text-yellow-300 transition-colors"
               >
                 Adicionar Produtos
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
