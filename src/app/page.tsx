@@ -17,7 +17,7 @@ const Home = () => {
         <h2 className="text-2xl font-bold text-center mb-6">
           Produtos em Promoção
         </h2>
-        <PromotionalProducts />
+        <PromotionalProducts viewMode="promotions"/>
       </main>
     </div>
   );
