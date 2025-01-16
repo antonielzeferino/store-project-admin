@@ -17,9 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body className="antialiased">
-      <Header/>
+      <body className="antialiased flex flex-col min-h-screen">
+        <Header/>
+        <div className="flex-grow">
         {children}
+        </div>
       </body>
     </html>
   );
