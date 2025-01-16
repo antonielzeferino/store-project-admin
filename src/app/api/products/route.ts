@@ -15,16 +15,15 @@ export interface ProductData {
   price: number;
   discountPercentage?: number;
   promotionEndDate?: string;
-  tags: string[];
+  tags?: string[];
   category: string;
   brand?: string;
   quantity?: string;
   weight?: number;
-  colors: string[];
+  colors?: string[];
   imageUrl: string;
 }
 
-// Função POST (Criar ou Atualizar Produto)
 export async function POST(request: Request) {
   try {
     const {
@@ -35,12 +34,12 @@ export async function POST(request: Request) {
       price,
       discountPercentage,
       promotionEndDate,
-      tags,
+      tags = [],
       category,
       brand,
       quantity,
       weight,
-      colors,
+      colors = [],
     }: ProductData = await request.json();
 
     if (!imageUrl) {
@@ -50,15 +49,15 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!name || !description || !price || !category || !tags.length || !colors.length) {
+    if (!name || !description || !price || !category) {
       return NextResponse.json(
-        { error: "Nome, descrição, preço, categoria, tags e cores são obrigatórios" },
+        { error: "Nome, descrição, preço e categoria são obrigatórios" },
         { status: 400 }
       );
     }
 
     if (id) {
-      // Atualizar produto existente
+      // update existent product
       const product = await prisma.product.findUnique({
         where: { id: id },
       });
@@ -90,7 +89,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(updatedProduct, { status: 200 });
     } else {
-      // Criar um novo produto
+      // add new product
       const newProduct = await prisma.product.create({
         data: {
           name,
@@ -128,10 +127,9 @@ export async function POST(request: Request) {
   }
 }
 
+// get all products
 export async function GET() {
-// Função GET (Buscar Todos os Produtos)
   try {
-    // Buscar todos os produtos no banco de dados
     const products = await prisma.product.findMany();
 
     return NextResponse.json(products, { status: 200 });
