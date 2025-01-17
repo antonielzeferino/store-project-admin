@@ -2,15 +2,11 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
-interface Params {
-  id: string;
-}
-
 export async function GET(
   request: NextRequest,
-  context: { params: Params }
+  { params }: { params: Record<string, string> }
 ): Promise<NextResponse> {
-  const { id } = context.params; 
+  const { id } = params; // Extrai o ID dos parâmetros
 
   try {
     if (!id) {
@@ -41,6 +37,7 @@ export async function GET(
     );
   }
 }
+
 
 
 // Handler for PUT
