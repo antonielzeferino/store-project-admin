@@ -3,6 +3,7 @@
 import { ProductData } from "@/app/api/products/route";
 import Loading from "@/app/loading";
 import axios from "axios";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 interface ShowProductProps {
@@ -31,9 +32,11 @@ const ShowProduct: React.FC<ShowProductProps> = ({ id }) => {
       <div className="flex flex-col sm:flex-row align-middle items-center justify-center sm:gap-5 sm:space-x-6">
 
         <div className="w-max mb-4 sm:mb-0">
-          <img
+          <Image
             src={product.imageUrl || "https://res.cloudinary.com/dzbwpszpa/image/upload/v1736981947/bn9ciopdszybdlmwtbrf.jpg"}
             alt={product.name}
+            width={300}
+            height={400}
             className="w-full max-w-72 h-auto rounded-md object-cover"
           />
         </div>

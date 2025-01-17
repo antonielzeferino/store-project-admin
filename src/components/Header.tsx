@@ -42,7 +42,7 @@ const Header = () => {
             </li>
             <li>
               <Link
-                href="/products"
+                href="/produtos"
                 className="block text-center hover:underline hover:text-yellow-300 transition-colors"
               >
                 Todos os Produtos
@@ -50,7 +50,7 @@ const Header = () => {
             </li>
             <li>
               <Link
-                href="/products/create-product"
+                href="/produtos/adicionar"
                 className="block text-center hover:underline hover:text-yellow-300 transition-colors"
               >
                 Adicionar Produtos

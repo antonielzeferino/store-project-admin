@@ -1,9 +1,14 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
-const CreateProduct = () => {
+interface EditProductProps {
+  id: string;
+}
+
+const EditProduct: React.FC<EditProductProps> = ({ id }) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -20,6 +25,38 @@ const CreateProduct = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(`/api/products/${id}`);
+        const product = response.data;
+        setFormData({
+          name: product.name || "",
+          description: product.description || "",
+          price: product.price?.toString() || "",
+          discountPercentage: product.discountPercentage?.toString() || "",
+          promotionEndDate: product.promotionEndDate?.split("T")[0] || "",
+          tags: product.tags || [],
+          category: product.category || "",
+          brand: product.brand || "",
+          quantity: product.quantity?.toString() || "",
+          weight: product.weight?.toString() || "",
+          colors: product.colors || [],
+          imageUrl: product.imageUrl || "",
+        });
+      } catch (error) {
+        console.error("Erro ao buscar o produto:", error);
+        alert("Não foi possível carregar as informações do produto.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -27,49 +64,29 @@ const CreateProduct = () => {
   };
 
   const uploadImageToCloudinary = async (): Promise<string | null> => {
-    if (!selectedFile) {
-      alert("Por favor, selecione um arquivo!");
-      return null;
-    }
+    if (!selectedFile) return formData.imageUrl;
 
     try {
-      // Obter assinatura e timestamp
-      const signatureResponse = await fetch("/api/cloudinary-signature", {
-        method: "POST",
-      });
-
-      if (!signatureResponse.ok) {
-        throw new Error("Erro ao obter assinatura para o Cloudinary.");
-      }
+      const signatureResponse = await fetch("/api/cloudinary-signature", { method: "POST" });
+      if (!signatureResponse.ok) throw new Error("Erro ao obter assinatura para o Cloudinary.");
 
       const { timestamp, signature } = await signatureResponse.json();
-
-      // Configurar dados do upload
       const imageData = new FormData();
       imageData.append("file", selectedFile);
-      imageData.append(
-        "api_key",
-        process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY as string
-      );
+      imageData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY as string);
       imageData.append("timestamp", timestamp);
       imageData.append("signature", signature);
       imageData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESENT as string);
 
-      // Fazer upload para o Cloudinary
       const cloudinaryResponse = await fetch(
         `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`,
-        {
-          method: "POST",
-          body: imageData,
-        }
+        { method: "POST", body: imageData }
       );
 
-      if (!cloudinaryResponse.ok) {
-        throw new Error("Erro ao fazer upload da imagem para o Cloudinary.");
-      }
+      if (!cloudinaryResponse.ok) throw new Error("Erro ao fazer upload da imagem para o Cloudinary.");
 
       const cloudinaryData = await cloudinaryResponse.json();
-      return cloudinaryData.secure_url; 
+      return cloudinaryData.secure_url;
     } catch (error) {
       console.error("Erro ao fazer upload da imagem:", error);
       alert("Erro ao fazer upload da imagem. Tente novamente.");
@@ -79,54 +96,30 @@ const CreateProduct = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setIsLoading(true);
 
     try {
-      // Fazer upload da imagem antes de criar o produto
       const imageUrl = await uploadImageToCloudinary();
       if (!imageUrl) {
         setIsLoading(false);
-        return; // Interromper se o upload falhar
+        return;
       }
 
-      const productData = {
-        name: formData.name,
-        description: formData.description,
+      const updatedProduct = {
+        ...formData,
         price: parseFloat(formData.price),
         discountPercentage: formData.discountPercentage ? parseFloat(formData.discountPercentage) : null,
         promotionEndDate: formData.promotionEndDate ? new Date(formData.promotionEndDate) : null,
-        tags: formData.tags || [] ,
-        category: formData.category,
-        brand: formData.brand || null,
-        quantity: formData.quantity || null,
         weight: formData.weight ? parseFloat(formData.weight) : null,
-        colors: formData.colors || [] ,
+        tags: formData.tags || [],
+        colors: formData.colors || [],
         imageUrl,
       };
 
-      // Fazer requisição para salvar o produto no backend
-      await axios.post("/api/products", productData);
-      alert("Produto criado com sucesso!");
-
-      // Resetar formulário
-      setFormData({
-        name: "",
-        description: "",
-        price: "",
-        discountPercentage: "",
-        promotionEndDate: "",
-        tags: [],
-        category: "",
-        brand: "",
-        quantity: "",
-        weight: "",
-        colors: [],
-        imageUrl: "",
-      });
-      setSelectedFile(null);
+      await axios.put(`/api/products/${id}`, updatedProduct);
+      router.push(`/produtos/${id}`)
     } catch (error) {
-      console.error("Erro ao criar produto:", error);
+      console.error("Erro ao atualizar produto:", error);
       alert("Algo deu errado! Tente novamente.");
     } finally {
       setIsLoading(false);
@@ -291,8 +284,8 @@ const CreateProduct = () => {
             name="imageUrl"
             className="p-2 border rounded-md w-full"
             onChange={(ev) => handleFileChange(ev)}
-            required
           />
+
         </div>
 
         <div className="col-span-2">
@@ -302,7 +295,7 @@ const CreateProduct = () => {
               }`}
             disabled={isLoading}
           >
-            {isLoading ? "Adicionando..." : "Criar Produto"}
+            {isLoading ? "Salvando..." : "Editar Produto"}
           </button>
         </div>
       </form>
@@ -310,4 +303,4 @@ const CreateProduct = () => {
   );
 };
 
-export default CreateProduct;
+export default EditProduct;

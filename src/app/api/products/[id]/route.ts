@@ -2,11 +2,12 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
-  try {
-    const { id } = params;
+// Handler para GET
+export async function GET(request: Request, context: { params: { id: string } }) {
+  const { id } = context.params;
 
-    if (!id || typeof id !== "string") {
+  try {
+    if (!id) {
       return NextResponse.json(
         { error: "ID inválido ou não fornecido" },
         { status: 400 }
@@ -25,12 +26,122 @@ export async function GET(request: Request, { params }: { params: { id: string }
     }
 
     return NextResponse.json(product, { status: 200 });
-  } catch (error: unknown) {
+  } catch (error) {
     console.error("Erro ao buscar produto:", error);
 
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       return NextResponse.json(
         { error: "Erro na consulta ao banco de dados", details: error.message },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: "Erro interno do servidor" },
+      { status: 500 }
+    );
+  }
+}
+
+// Handler para PUT
+export async function PUT(request: Request, context: { params: { id: string } }) {
+  const { id } = context.params;
+
+  try {
+    if (!id) {
+      return NextResponse.json(
+        { error: "ID inválido ou não fornecido" },
+        { status: 400 }
+      );
+    }
+
+    const body = await request.json();
+    const { name, price, description, imageUrl, discountPercentage, promotionEndDate, weight, tags, colors } = body;
+
+    if (!name || typeof name !== "string") {
+      return NextResponse.json(
+        { error: "Nome do produto é obrigatório e deve ser uma string" },
+        { status: 400 }
+      );
+    }
+
+    if (price !== undefined && (typeof price !== "number" || price < 0)) {
+      return NextResponse.json(
+        { error: "O preço deve ser um número válido e maior ou igual a zero" },
+        { status: 400 }
+      );
+    }
+
+    const updatedProduct = await prisma.product.update({
+      where: { id },
+      data: {
+        name,
+        price,
+        description: description || undefined,
+        imageUrl: imageUrl || undefined,
+        discountPercentage,
+        promotionEndDate,
+        weight,
+        tags,
+        colors,
+      },
+    });
+
+    return NextResponse.json(updatedProduct, { status: 200 });
+  } catch (error) {
+    console.error("Erro ao atualizar produto:", error);
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return NextResponse.json(
+        { error: "Erro na atualização do banco de dados", details: error.message },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: "Erro interno do servidor" },
+      { status: 500 }
+    );
+  }
+}
+
+// Handler para DELETE
+export async function DELETE(request: Request, context: { params: { id: string } }) {
+  const { id } = context.params;
+
+  try {
+    if (!id) {
+      return NextResponse.json(
+        { error: "ID inválido ou não fornecido" },
+        { status: 400 }
+      );
+    }
+
+    const existingProduct = await prisma.product.findUnique({
+      where: { id },
+    });
+
+    if (!existingProduct) {
+      return NextResponse.json(
+        { error: "Produto não encontrado" },
+        { status: 404 }
+      );
+    }
+
+    await prisma.product.delete({
+      where: { id },
+    });
+
+    return NextResponse.json(
+      { message: "Produto deletado com sucesso" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Erro ao deletar produto:", error);
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return NextResponse.json(
+        { error: "Erro ao acessar o banco de dados", details: error.message },
         { status: 500 }
       );
     }

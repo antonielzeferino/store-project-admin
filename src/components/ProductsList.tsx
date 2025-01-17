@@ -3,6 +3,7 @@
 import { ProductData } from "@/app/api/products/route";
 import Loading from "@/app/loading";
 import axios from "axios";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -84,29 +85,31 @@ const ProductsList: React.FC<ProductsProps> = ({ viewMode, enableSearch = false 
                 }
                 return (
                   <div key={id} className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between">
-                    <img
+                    <Image
                       src={
                         product.imageUrl ||
                         "https://res.cloudinary.com/dzbwpszpa/image/upload/v1736981947/bn9ciopdszybdlmwtbrf.jpg"
                       }
                       alt={name}
+                      width={300}
+                      height={400}
                       className="w-24 h-24 object-cover mb-4 rounded-lg mx-auto"
                     />
                     <h5 className="text-2xl font-bold text-indigo-600 mb-2">
-                      <Link href={`/products/${id}`}>{name}</Link>
+                      <Link href={`/produtos/${id}`}>{name}</Link>
                     </h5>
                     <p className="text-sm text-gray-600 mb-2">
                       {description.slice(0, 75)}
                       {description.length > 75 && "..."}
                     </p>
-                    <div className="flex flex-col sm:flex-row sm:justify-between">
+                    <div className="flex flex-col">
                       <span className="text-lg font-bold text-gray-800">
-                        Preço: <span className="text-2xl text-green-600">{price.toFixed(2)}</span>
+                        Preço: <span className="text-xl text-green-600">{price.toFixed(2)}</span>
                       </span>
                       {discountPercentage && (
                         <div className="mt-2 sm:mt-0 text-sm text-red-500">
                           <div className="text-black text-base">
-                            Preço com desconto:{" "}
+                            Com desconto:{" "}
                             <span className="font-semibold text-green-600">{discountPrice}</span>
                           </div>
                           <span className="font-semibold text-xs">Desconto: {discountPercentage}%</span>
