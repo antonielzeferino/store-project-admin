@@ -45,8 +45,9 @@ export async function GET(request: NextRequest) {
 }
 
 // Handler for PUT
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function PUT(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
 
   try {
     if (!id) {
@@ -107,8 +108,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // Handler for DELETE
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function DELETE(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
 
   try {
     if (!id) {
