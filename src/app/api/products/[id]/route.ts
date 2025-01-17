@@ -1,10 +1,10 @@
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // Handler para GET
-export async function GET(request: Request, context: { params: { id: string } }) {
-  const { id } = context.params;
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  const { id } = params;
 
   try {
     if (!id) {
@@ -106,7 +106,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
 }
 
 // Handler para DELETE
-export async function DELETE(request: Request, context: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: { id: string } }) {
   const { id } = context.params;
 
   try {
