@@ -3,9 +3,10 @@ import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 // Handler for GET
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  const id = params.id;
+
+  console.log("ID recebido via rota dinâmica:", id);
 
   try {
     if (!id) {
@@ -29,14 +30,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(product, { status: 200 });
   } catch (error) {
     console.error("Erro ao buscar produto:", error);
-
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      return NextResponse.json(
-        { error: "Erro na consulta ao banco de dados", details: error.message },
-        { status: 500 }
-      );
-    }
-
     return NextResponse.json(
       { error: "Erro interno do servidor" },
       { status: 500 }
