@@ -2,9 +2,10 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
-// Handler para GET
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+// Handler for GET
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
 
   try {
     if (!id) {
@@ -43,9 +44,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-// Handler para PUT
-export async function PUT(request: Request, context: { params: { id: string } }) {
-  const { id } = context.params;
+// Handler for PUT
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+  const { id } = params;
 
   try {
     if (!id) {
@@ -105,7 +106,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
   }
 }
 
-// Handler para DELETE
+// Handler for DELETE
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   const { id } = params;
 
