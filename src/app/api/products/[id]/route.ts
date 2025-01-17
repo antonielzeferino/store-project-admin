@@ -2,11 +2,9 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
-// Handler for GET
+// Handler para GET
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const id = params.id;
-
-  console.log("ID recebido via rota dinâmica:", id);
+  const { id } = params; // Captura o ID dos parâmetros da URL
 
   try {
     if (!id) {
@@ -36,6 +34,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     );
   }
 }
+
 
 // Handler for PUT
 export async function PUT(request: NextRequest) {
