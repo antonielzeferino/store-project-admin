@@ -2,9 +2,15 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
-// Handler para GET
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params; // Captura o ID dos parâmetros da URL
+interface Params {
+  id: string;
+}
+
+export async function GET(
+  request: NextRequest,
+  context: { params: Params }
+): Promise<NextResponse> {
+  const { id } = context.params; 
 
   try {
     if (!id) {
@@ -28,6 +34,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json(product, { status: 200 });
   } catch (error) {
     console.error("Erro ao buscar produto:", error);
+
     return NextResponse.json(
       { error: "Erro interno do servidor" },
       { status: 500 }
