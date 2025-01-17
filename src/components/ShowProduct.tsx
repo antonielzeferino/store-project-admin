@@ -16,7 +16,7 @@ const ShowProduct: React.FC<ShowProductProps> = ({ id }) => {
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
-        const response = await axios.get(`/api/products/${id}`);
+        const response = await axios.get<ProductData>(`/api/products/${id}`);
         setProduct(response.data);
       } catch (error) {
         console.error("Erro ao buscar os detalhes do produto:", error);
@@ -36,6 +36,7 @@ const ShowProduct: React.FC<ShowProductProps> = ({ id }) => {
             src={product.imageUrl || "https://res.cloudinary.com/dzbwpszpa/image/upload/v1736981947/bn9ciopdszybdlmwtbrf.jpg"}
             alt={product.name}
             width={300}
+            priority
             height={400}
             className="w-full max-w-72 h-auto rounded-md object-cover"
           />

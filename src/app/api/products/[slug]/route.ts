@@ -2,15 +2,14 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
-// Handler GET com tipagem corrigida
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
-): Promise<NextResponse> {
-  const { id } = context.params; // Extrai o ID dos parâmetros
+  { params }: { params: { slug: string } }
+) {
+  const { slug } = params;
 
   try {
-    if (!id) {
+    if (!slug) {
       return NextResponse.json(
         { error: "ID inválido ou não fornecido" },
         { status: 400 }
@@ -18,7 +17,7 @@ export async function GET(
     }
 
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: { id: slug },
     });
 
     if (!product) {
@@ -32,6 +31,13 @@ export async function GET(
   } catch (error) {
     console.error("Erro ao buscar produto:", error);
 
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return NextResponse.json(
+        { error: "Erro na consulta ao banco de dados", details: error.message },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(
       { error: "Erro interno do servidor" },
       { status: 500 }
@@ -39,16 +45,15 @@ export async function GET(
   }
 }
 
-
-
-
-// Handler for PUT
-export async function PUT(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
-
+// Handler para PUT
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { slug: string } }
+) {
+  const { slug } = params;
+  
   try {
-    if (!id) {
+    if (!slug) {
       return NextResponse.json(
         { error: "ID inválido ou não fornecido" },
         { status: 400 }
@@ -73,7 +78,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const updatedProduct = await prisma.product.update({
-      where: { id },
+      where: { id: slug },
       data: {
         name,
         price,
@@ -105,13 +110,14 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// Handler for DELETE
-export async function DELETE(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { slug: string } }
+) {
+  const { slug } = params;  
 
   try {
-    if (!id) {
+    if (!slug) {
       return NextResponse.json(
         { error: "ID inválido ou não fornecido" },
         { status: 400 }
@@ -119,7 +125,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const existingProduct = await prisma.product.findUnique({
-      where: { id },
+      where: { id: slug },
     });
 
     if (!existingProduct) {
@@ -130,7 +136,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     await prisma.product.delete({
-      where: { id },
+      where: { id: slug },
     });
 
     return NextResponse.json(
