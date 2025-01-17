@@ -106,8 +106,8 @@ export async function PUT(request: Request, context: { params: { id: string } })
 }
 
 // Handler para DELETE
-export async function DELETE(request: NextRequest, context: { params: { id: string } }) {
-  const { id } = context.params;
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  const { id } = params;
 
   try {
     if (!id) {
