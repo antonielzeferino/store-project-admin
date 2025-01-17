@@ -2,11 +2,12 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
+// Handler GET com tipagem corrigida
 export async function GET(
   request: NextRequest,
-  { params }: { params: Record<string, string> }
+  context: { params: { id: string } }
 ): Promise<NextResponse> {
-  const { id } = params; // Extrai o ID dos parâmetros
+  const { id } = context.params; // Extrai o ID dos parâmetros
 
   try {
     if (!id) {
@@ -37,6 +38,7 @@ export async function GET(
     );
   }
 }
+
 
 
 
