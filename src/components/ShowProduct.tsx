@@ -38,7 +38,7 @@ const ShowProduct: React.FC<ShowProductProps> = ({ id }) => {
           />
         </div>
 
-        <div className="w-full sm:w-3/5 text-left space-y-3">
+        <div className="w-full text-left space-y-3">
           <h2 className="text-xl font-semibold text-gray-800">{product.name}</h2>
 
           <div className="flex flex-wrap space-x-4">

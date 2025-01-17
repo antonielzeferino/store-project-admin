@@ -1,0 +1,25 @@
+import type { Metadata } from "next";
+import BackButton from "@/components/BackButton";
+
+export const metadata: Metadata = {
+  title: "Doce Essencia | Produtos",
+  description: "O lugar perfeito para fazer suas compras.",
+  icons: {
+    icon: "/favicon.png",
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <>
+      <BackButton />
+      <div className="flex-grow">
+        {children}
+      </div>
+    </>
+  );
+}
