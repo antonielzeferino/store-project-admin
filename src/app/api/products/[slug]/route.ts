@@ -1,10 +1,14 @@
 import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
+interface RouteParams {
+  slug: string;
+}
+
+// GET Handler
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { slug: string } }
+  request: Request,
+  { params }: { params: RouteParams }
 ) {
   const { slug } = params;
 
@@ -31,13 +35,6 @@ export async function GET(
   } catch (error) {
     console.error("Erro ao buscar produto:", error);
 
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      return NextResponse.json(
-        { error: "Erro na consulta ao banco de dados", details: error.message },
-        { status: 500 }
-      );
-    }
-
     return NextResponse.json(
       { error: "Erro interno do servidor" },
       { status: 500 }
@@ -45,13 +42,13 @@ export async function GET(
   }
 }
 
-// Handler para PUT
+// PUT Handler
 export async function PUT(
-  request: NextRequest,
-  { params }: { params: { slug: string } }
+  request: Request,
+  { params }: { params: RouteParams }
 ) {
   const { slug } = params;
-  
+
   try {
     if (!slug) {
       return NextResponse.json(
@@ -61,18 +58,11 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const { name, price, description, imageUrl, discountPercentage, promotionEndDate, weight, tags, colors } = body;
+    const { name, price, description, imageUrl, ...rest } = body;
 
     if (!name || typeof name !== "string") {
       return NextResponse.json(
         { error: "Nome do produto é obrigatório e deve ser uma string" },
-        { status: 400 }
-      );
-    }
-
-    if (price !== undefined && (typeof price !== "number" || price < 0)) {
-      return NextResponse.json(
-        { error: "O preço deve ser um número válido e maior ou igual a zero" },
         { status: 400 }
       );
     }
@@ -84,24 +74,13 @@ export async function PUT(
         price,
         description: description || undefined,
         imageUrl: imageUrl || undefined,
-        discountPercentage,
-        promotionEndDate,
-        weight,
-        tags,
-        colors,
+        ...rest,
       },
     });
 
     return NextResponse.json(updatedProduct, { status: 200 });
   } catch (error) {
     console.error("Erro ao atualizar produto:", error);
-
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      return NextResponse.json(
-        { error: "Erro na atualização do banco de dados", details: error.message },
-        { status: 500 }
-      );
-    }
 
     return NextResponse.json(
       { error: "Erro interno do servidor" },
@@ -110,9 +89,10 @@ export async function PUT(
   }
 }
 
+// DELETE Handler
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { slug: string } }
+  request: Request,
+  { params }: { params: RouteParams }
 ) {
   const { slug } = params;
 
@@ -145,13 +125,6 @@ export async function DELETE(
     );
   } catch (error) {
     console.error("Erro ao deletar produto:", error);
-
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      return NextResponse.json(
-        { error: "Erro ao acessar o banco de dados", details: error.message },
-        { status: 500 }
-      );
-    }
 
     return NextResponse.json(
       { error: "Erro interno do servidor" },
