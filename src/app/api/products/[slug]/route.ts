@@ -114,7 +114,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { slug: string } }
 ) {
-  const { slug } = params;  
+  const { slug } = params;
 
   try {
     if (!slug) {
