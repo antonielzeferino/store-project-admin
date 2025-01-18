@@ -11,7 +11,7 @@ export async function GET(
   { params }: { params: RouteParams }
 ) {
   const { slug } = params;
-
+  
   try {
     if (!slug) {
       return NextResponse.json(
@@ -19,6 +19,7 @@ export async function GET(
         { status: 400 }
       );
     }
+    console.log(slug)
 
     const product = await prisma.product.findUnique({
       where: { id: slug },
