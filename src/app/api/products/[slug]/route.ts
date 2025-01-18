@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
-  { params }: { params: { slug: string } } // Tipo correto de params no Next.js 15
+  { params }: { params: Promise<{ slug: string }> } 
 ) {
-  const { slug } = params; 
+  const { slug } = await params;
   
   try {
     if (!slug) {
@@ -14,7 +14,6 @@ export async function GET(
         { status: 400 }
       );
     }
-    console.log(slug)
 
     const product = await prisma.product.findUnique({
       where: { id: slug },
@@ -41,9 +40,9 @@ export async function GET(
 // PUT Handler
 export async function PUT(
   request: Request,
-  { params }: { params: { slug: string } } // Tipo correto de params no Next.js 15
+  { params }: { params: Promise<{ slug: string }> } 
 ) {
-  const { slug } = params;
+  const { slug } = await params;
 
   try {
     if (!slug) {
@@ -88,9 +87,9 @@ export async function PUT(
 // DELETE Handler
 export async function DELETE(
   request: Request,
-  { params }: { params: { slug: string } } 
+  { params }: { params: Promise<{ slug: string }> } 
 ) {
-  const { slug } = params; 
+  const { slug } = await params; 
 
   try {
     if (!slug) {
