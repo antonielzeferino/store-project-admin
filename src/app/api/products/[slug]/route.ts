@@ -1,16 +1,11 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-interface RouteParams {
-  slug: string;
-}
-
-// GET Handler
 export async function GET(
   request: Request,
-  { params }: { params: RouteParams }
+  { params }: { params: { slug: string } } // Tipo correto de params no Next.js 15
 ) {
-  const { slug } = params;
+  const { slug } = params; 
   
   try {
     if (!slug) {
@@ -46,7 +41,7 @@ export async function GET(
 // PUT Handler
 export async function PUT(
   request: Request,
-  { params }: { params: RouteParams }
+  { params }: { params: { slug: string } } // Tipo correto de params no Next.js 15
 ) {
   const { slug } = params;
 
@@ -93,9 +88,9 @@ export async function PUT(
 // DELETE Handler
 export async function DELETE(
   request: Request,
-  { params }: { params: RouteParams }
+  { params }: { params: { slug: string } } 
 ) {
-  const { slug } = params;
+  const { slug } = params; 
 
   try {
     if (!slug) {
