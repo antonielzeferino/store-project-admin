@@ -37,13 +37,13 @@ function corsResponse(request: Request) {
 
 export async function GET(
   request: Request,
-  { params }: { params: { filters: string[] } }
+  { params }: { params: Promise<{ filters: string[] }> }
 ) {
   const cors = corsResponse(request);
   if (cors && cors.status === 403) return cors;
 
   try {
-    const { filters } = params;
+    const { filters } = await params;
 
     // Tipagem para o objeto de filtros
     const filterObject: FilterValue = {};

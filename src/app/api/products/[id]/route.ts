@@ -3,12 +3,12 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> } 
+  { params }: { params: Promise<{ id: string }> } 
 ) {
-  const { slug } = await params;
+  const { id } = await params;
   
   try {
-    if (!slug) {
+    if (!id) {
       return NextResponse.json(
         { error: "ID inválido ou não fornecido" },
         { status: 400 }
@@ -16,7 +16,7 @@ export async function GET(
     }
 
     const product = await prisma.product.findUnique({
-      where: { id: slug },
+      where: { id },
     });
 
     if (!product) {
@@ -40,12 +40,12 @@ export async function GET(
 // PUT Handler
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> } 
+  { params }: { params: Promise<{ id: string }> } 
 ) {
-  const { slug } = await params;
+  const { id } = await params;
 
   try {
-    if (!slug) {
+    if (!id) {
       return NextResponse.json(
         { error: "ID inválido ou não fornecido" },
         { status: 400 }
@@ -63,7 +63,7 @@ export async function PUT(
     }
 
     const updatedProduct = await prisma.product.update({
-      where: { id: slug },
+      where: { id },
       data: {
         name,
         price,
@@ -87,12 +87,12 @@ export async function PUT(
 // DELETE Handler
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> } 
+  { params }: { params: Promise<{ id: string }> } 
 ) {
-  const { slug } = await params; 
+  const { id } = await params; 
 
   try {
-    if (!slug) {
+    if (!id) {
       return NextResponse.json(
         { error: "ID inválido ou não fornecido" },
         { status: 400 }
@@ -100,7 +100,7 @@ export async function DELETE(
     }
 
     const existingProduct = await prisma.product.findUnique({
-      where: { id: slug },
+      where: { id },
     });
 
     if (!existingProduct) {
@@ -111,7 +111,7 @@ export async function DELETE(
     }
 
     await prisma.product.delete({
-      where: { id: slug },
+      where: { id },
     });
 
     return NextResponse.json(
