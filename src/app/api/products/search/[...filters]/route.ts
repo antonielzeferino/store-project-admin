@@ -11,37 +11,10 @@ type FilterValue = {
   category?: { equals: string };
 };
 
-function corsResponse(request: Request) {
-  const origin = request.headers.get("origin");
-
-  const allowedOrigins = [
-    "http://localhost:3000",
-    "https://doce-essencia.vercel.app",
-  ];
-
-  if (origin && allowedOrigins.includes(origin)) {
-    return new NextResponse(null, {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
-        "Access-Control-Allow-Headers": "Content-Type",
-      },
-    });
-  }
-
-  return NextResponse.json(
-    { error: "CORS não permitido para esta origem" },
-    { status: 403 }
-  );
-}
-
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ filters: string[] }> }
 ) {
-  const cors = corsResponse(request);
-  if (cors && cors.status === 403) return cors;
-
   try {
     const { filters } = await params;
 
