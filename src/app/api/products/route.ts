@@ -24,6 +24,30 @@ export interface ProductData {
   imageUrl: string;
 }
 
+
+// get all products
+export async function GET() {
+  try {
+    const products = await prisma.product.findMany();
+
+    return NextResponse.json(products, { status: 200 });
+  } catch (error: unknown) {
+    console.error("Erro ao buscar produtos:", error);
+
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: "Erro ao buscar produtos", details: error.message },
+        { status: 500 }
+      );
+    } else {
+      return NextResponse.json(
+        { error: "Erro ao buscar produtos" },
+        { status: 500 }
+      );
+    }
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const {
@@ -121,29 +145,6 @@ export async function POST(request: Request) {
     } else {
       return NextResponse.json(
         { error: "Erro Interno do Servidor" },
-        { status: 500 }
-      );
-    }
-  }
-}
-
-// get all products
-export async function GET() {
-  try {
-    const products = await prisma.product.findMany();
-
-    return NextResponse.json(products, { status: 200 });
-  } catch (error: unknown) {
-    console.error("Erro ao buscar produtos:", error);
-
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { error: "Erro ao buscar produtos", details: error.message },
-        { status: 500 }
-      );
-    } else {
-      return NextResponse.json(
-        { error: "Erro ao buscar produtos" },
         { status: 500 }
       );
     }
