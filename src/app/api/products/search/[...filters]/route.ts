@@ -22,7 +22,7 @@ function corsResponse(request: Request) {
   if (origin && allowedOrigins.includes(origin)) {
     return new NextResponse(null, {
       headers: {
-        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET",
         "Access-Control-Allow-Headers": "Content-Type",
       },
