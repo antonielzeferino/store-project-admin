@@ -1,6 +1,16 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
+// Tipagem para os filtros suportados
+type FilterKeys = "name" | "description" | "tags" | "category";
+
+type FilterValue = {
+  name?: { contains: string; mode: "insensitive" };
+  description?: { contains: string; mode: "insensitive" };
+  tags?: { hasSome: string[] };
+  category?: { equals: string };
+};
+
 function corsResponse(request: Request) {
   const origin = request.headers.get("origin");
 
@@ -25,7 +35,6 @@ function corsResponse(request: Request) {
   );
 }
 
-
 export async function GET(
   request: Request,
   { params }: { params: { filters: string[] } }
@@ -36,12 +45,14 @@ export async function GET(
   try {
     const { filters } = params;
 
-    const filterObject: any = {};
+    // Tipagem para o objeto de filtros
+    const filterObject: FilterValue = {};
+
     for (const filter of filters) {
       const [key, value] = filter.split("=");
       if (!key || !value) continue;
 
-      switch (key) {
+      switch (key as FilterKeys) {
         case "name":
           filterObject.name = { contains: value, mode: "insensitive" };
           break;
@@ -49,7 +60,7 @@ export async function GET(
           filterObject.description = { contains: value, mode: "insensitive" };
           break;
         case "tags":
-          filterObject.tags = { hasSome: value.split(",") };  // Suporta múltiplas tags
+          filterObject.tags = { hasSome: value.split(",") }; // Suporta múltiplas tags
           break;
         case "category":
           filterObject.category = { equals: value };
