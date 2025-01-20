@@ -35,6 +35,15 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "/api/:path*",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
