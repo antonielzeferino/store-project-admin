@@ -9,7 +9,8 @@ const nextConfig: NextConfig = {
         pathname: "/**", // Isso permite qualquer caminho
       },
     ],
-  },  async headers() {
+  },  
+  async headers() {
     return [
       {
         source: "/api/:path*",
@@ -20,7 +21,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Access-Control-Allow-Origin",
-            value: "http://localhost:3000",
+            value: "*",
           },
           {
             key: "Access-Control-Allow-Methods",
@@ -36,3 +37,4 @@ const nextConfig: NextConfig = {
   },
 };
 
+export default nextConfig;

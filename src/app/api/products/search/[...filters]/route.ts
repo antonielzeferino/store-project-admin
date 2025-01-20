@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-// Tipagem para os filtros suportados
 type FilterKeys = "name" | "description" | "tags" | "category";
 
 type FilterValue = {
@@ -18,7 +17,6 @@ export async function GET(
   try {
     const { filters } = await params;
 
-    // Tipagem para o objeto de filtros
     const filterObject: FilterValue = {};
 
     for (const filter of filters) {
@@ -33,7 +31,7 @@ export async function GET(
           filterObject.description = { contains: value, mode: "insensitive" };
           break;
         case "tags":
-          filterObject.tags = { hasSome: value.split(",") }; // Suporta múltiplas tags
+          filterObject.tags = { hasSome: value.split(",") };
           break;
         case "category":
           filterObject.category = { equals: value };
@@ -47,13 +45,48 @@ export async function GET(
       where: filterObject,
     });
 
-    return NextResponse.json(products, { status: 200 });
+    const response = NextResponse.json(products, { status: 200 });
+
+    // Adicionar cabeçalhos CORS
+    response.headers.set("Access-Control-Allow-Origin", "*");
+    response.headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    response.headers.set(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization"
+    );
+
+    return response;
   } catch (error: unknown) {
     console.error("Erro ao buscar produtos:", error);
 
-    return NextResponse.json(
-      { error: "Erro ao buscar produtos", details: error instanceof Error ? error.message : '' },
+    const response = NextResponse.json(
+      {
+        error: "Erro ao buscar produtos",
+        details: error instanceof Error ? error.message : "",
+      },
       { status: 500 }
     );
+
+    // Adicionar cabeçalhos CORS em caso de erro
+    response.headers.set("Access-Control-Allow-Origin", "*");
+    response.headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    response.headers.set(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization"
+    );
+
+    return response;
   }
+}
+
+// Suporte para OPTIONS
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  });
 }
