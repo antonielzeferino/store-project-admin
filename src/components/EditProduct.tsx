@@ -135,6 +135,11 @@ const EditProduct: React.FC<EditProductProps> = ({ id }) => {
     setFormData({ ...formData, [field]: value });
   };
 
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value.toLowerCase() });
+  };
+
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h2 className="text-2xl font-bold mb-6">Criar Novo Produto</h2>
@@ -216,16 +221,20 @@ const EditProduct: React.FC<EditProductProps> = ({ id }) => {
         </div>
 
         <div className="flex flex-wrap">
-          <label htmlFor="category" className="block text-sm font-medium">Categoria <span className="text-red-500">*</span></label>
-          <input
-            type="text"
-            id="category"
+          <label htmlFor="category" className="block text-sm font-medium">
+            Categoria <span className="text-red-500">*</span>
+          </label>
+          <select
             name="category"
-            className="p-2 border rounded-md w-full"
+            id="category"
             value={formData.category}
-            onChange={handleInputChange}
-            required
-          />
+            onChange={(e) => handleSelectChange(e)}
+            className="p-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-medium-blue"
+          >
+            <option value="Perfumes">Perfumes</option>
+            <option value="Kits & Presentes">Kits & Presentes</option>
+            <option value="Cosmeticos">Cosmeticos</option>
+          </select>
         </div>
 
         <div className="flex flex-wrap">

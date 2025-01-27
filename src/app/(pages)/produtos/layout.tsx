@@ -16,7 +16,6 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <BackButton />
       <div className="flex-grow">
         {children}
       </div>

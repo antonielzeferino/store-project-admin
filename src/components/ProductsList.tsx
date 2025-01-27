@@ -63,7 +63,7 @@ const ProductsList: React.FC<ProductsProps> = ({ viewMode, enableSearch = false 
       {isLoading ? (
         <Loading />
       ) : (
-        <div className="w-full">
+        <div className="w-full max-w-7xl mx-auto">
           <div className={`mb-2 px-4 ${!enableSearch && "hidden"}`}>
             <input
               type="text"
@@ -73,8 +73,9 @@ const ProductsList: React.FC<ProductsProps> = ({ viewMode, enableSearch = false 
               className="p-2 border border-gray-300 rounded-lg w-full"
             />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
-            {filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] gap-4 p-4">
+
+          {filteredProducts.length > 0 ? (
               filteredProducts.map((product) => {
                 const { id, name, description, price, discountPercentage } = product;
 
@@ -95,12 +96,11 @@ const ProductsList: React.FC<ProductsProps> = ({ viewMode, enableSearch = false 
                       height={400}
                       className="w-24 h-24 object-cover mb-4 rounded-lg mx-auto"
                     />
-                    <h5 className="text-2xl font-bold text-indigo-600 mb-2">
+                    <h5 className="text-2xl font-bold text-indigo-600 mb-2 line-clamp-2">
                       <Link href={`/produtos/${id}`}>{name}</Link>
                     </h5>
-                    <p className="text-sm text-gray-600 mb-2">
-                      {description.slice(0, 75)}
-                      {description.length > 75 && "..."}
+                    <p className="text-sm text-gray-600 mb-2 line-clamp-3">
+                      {description}
                     </p>
                     <div className="flex flex-col">
                       <span className="text-lg font-bold text-gray-800">

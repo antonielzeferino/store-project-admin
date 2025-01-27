@@ -69,7 +69,7 @@ const CreateProduct = () => {
       }
 
       const cloudinaryData = await cloudinaryResponse.json();
-      return cloudinaryData.secure_url; 
+      return cloudinaryData.secure_url;
     } catch (error) {
       console.error("Erro ao fazer upload da imagem:", error);
       alert("Erro ao fazer upload da imagem. Tente novamente.");
@@ -96,12 +96,12 @@ const CreateProduct = () => {
         price: parseFloat(formData.price),
         discountPercentage: formData.discountPercentage ? parseFloat(formData.discountPercentage) : null,
         promotionEndDate: formData.promotionEndDate ? new Date(formData.promotionEndDate) : null,
-        tags: formData.tags || [] ,
+        tags: formData.tags || [],
         category: formData.category,
         brand: formData.brand || null,
         quantity: formData.quantity || null,
         weight: formData.weight ? parseFloat(formData.weight) : null,
-        colors: formData.colors || [] ,
+        colors: formData.colors || [],
         imageUrl,
       };
 
@@ -134,12 +134,17 @@ const CreateProduct = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value.toLowerCase() });
   };
 
   const handleArrayChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
-    const value = e.target.value.split(",").map((item) => item.trim());
+    const value = e.target.value.split(",").map((item) => item.toLowerCase().trim());
     setFormData({ ...formData, [field]: value });
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value.toLowerCase() });
   };
 
   return (
@@ -223,16 +228,20 @@ const CreateProduct = () => {
         </div>
 
         <div className="flex flex-wrap">
-          <label htmlFor="category" className="block text-sm font-medium">Categoria <span className="text-red-500">*</span></label>
-          <input
-            type="text"
-            id="category"
+          <label htmlFor="category" className="block text-sm font-medium">
+            Categoria <span className="text-red-500">*</span>
+          </label>
+          <select
             name="category"
-            className="p-2 border rounded-md w-full"
+            id="category"
             value={formData.category}
-            onChange={handleInputChange}
-            required
-          />
+            onChange={(e) => handleSelectChange(e)}
+            className="p-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-medium-blue"
+          >
+            <option value="Perfumes">Perfumes</option>
+            <option value="Kits & Presentes">Kits & Presentes</option>
+            <option value="Cosmeticos">Cosmeticos</option>
+          </select>
         </div>
 
         <div className="flex flex-wrap">
