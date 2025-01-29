@@ -234,7 +234,8 @@ const CreateProduct = () => {
             onChange={(e) => handleSelectChange(e)}
             className="p-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-medium-blue"
           >
-            <option value="Perfumes" selected>Perfumes</option>
+            <option value="" selected disabled>selecione uma categoria</option>
+            <option value="Perfumes">Perfumes</option>
             <option value="Kits & Presentes">Kits & Presentes</option>
             <option value="Cosmeticos">Cosmeticos</option>
           </select>
