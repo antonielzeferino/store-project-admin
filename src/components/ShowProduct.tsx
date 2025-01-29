@@ -62,7 +62,6 @@ const ShowProduct: React.FC<ShowProductProps> = ({ id }) => {
             <p><strong>Categoria:</strong> {product.category}</p>
             <p><strong>Marca:</strong> {product.brand || "Não especificada"}</p>
             <p><strong>Quantidade:</strong> {product.quantity || "Não especificada"}</p>
-            <p><strong>Peso:</strong> {product.weight ? `${product.weight} gramas` : "Não especificado"}</p>
           </div>
 
           {product.colors && (
