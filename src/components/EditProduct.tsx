@@ -19,7 +19,6 @@ const EditProduct: React.FC<EditProductProps> = ({ id }) => {
     category: "",
     brand: "",
     quantity: "",
-    weight: "",
     colors: [],
     imageUrl: "",
   });
@@ -43,7 +42,6 @@ const EditProduct: React.FC<EditProductProps> = ({ id }) => {
           category: product.category || "",
           brand: product.brand || "",
           quantity: product.quantity?.toString() || "",
-          weight: product.weight?.toString() || "",
           colors: product.colors || [],
           imageUrl: product.imageUrl || "",
         });
@@ -110,7 +108,6 @@ const EditProduct: React.FC<EditProductProps> = ({ id }) => {
         price: parseFloat(formData.price),
         discountPercentage: formData.discountPercentage ? parseFloat(formData.discountPercentage) : null,
         promotionEndDate: formData.promotionEndDate ? new Date(formData.promotionEndDate) : null,
-        weight: formData.weight ? parseFloat(formData.weight) : null,
         tags: formData.tags || [],
         colors: formData.colors || [],
         imageUrl,
@@ -137,7 +134,7 @@ const EditProduct: React.FC<EditProductProps> = ({ id }) => {
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value.toLowerCase() });
+    setFormData({ ...formData, [name]: value });
   };
 
   return (
@@ -250,25 +247,13 @@ const EditProduct: React.FC<EditProductProps> = ({ id }) => {
         </div>
 
         <div className="flex flex-wrap">
-          <label htmlFor="quantity" className="block text-sm font-medium">Quantidade</label>
+          <label htmlFor="quantity" className="block text-sm font-medium">Quantidade (ml/g)</label>
           <input
             type="text"
             id="quantity"
             name="quantity"
             className="p-2 border rounded-md w-full"
             value={formData.quantity}
-            onChange={handleInputChange}
-          />
-        </div>
-
-        <div className="flex flex-wrap">
-          <label htmlFor="weight" className="block text-sm font-medium">Peso</label>
-          <input
-            type="number"
-            id="weight"
-            name="weight"
-            className="p-2 border rounded-md w-full"
-            value={formData.weight}
             onChange={handleInputChange}
           />
         </div>

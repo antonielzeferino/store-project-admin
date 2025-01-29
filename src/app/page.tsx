@@ -6,10 +6,10 @@ const Home = () => {
       <main className="container mx-auto px-4 text-center">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Link
-            href="/produtos/promo"
+            href="/produtos/adicionar"
             className="block px-8 py-6 bg-blue-600 text-gray-50 text-lg font-semibold rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg transition-all content-center"
           >
-            Promoções
+            Adicionar Produtos
           </Link>
           <Link
             href="/produtos"
@@ -18,10 +18,10 @@ const Home = () => {
             Todos os Produtos
           </Link>
           <Link
-            href="/produtos/adicionar"
+            href="/produtos/promo"
             className="block px-8 py-6 bg-blue-600 text-gray-50 text-lg font-semibold rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg transition-all content-center"
           >
-            Adicionar Produtos
+            Promoções
           </Link>
         </div>
       </main>

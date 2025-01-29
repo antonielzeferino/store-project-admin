@@ -14,7 +14,6 @@ const CreateProduct = () => {
     category: "",
     brand: "",
     quantity: "",
-    weight: "",
     colors: [],
     imageUrl: "",
   });
@@ -83,11 +82,10 @@ const CreateProduct = () => {
     setIsLoading(true);
 
     try {
-      // Fazer upload da imagem antes de criar o produto
       const imageUrl = await uploadImageToCloudinary();
       if (!imageUrl) {
         setIsLoading(false);
-        return; // Interromper se o upload falhar
+        return;
       }
 
       const productData = {
@@ -100,7 +98,6 @@ const CreateProduct = () => {
         category: formData.category,
         brand: formData.brand || null,
         quantity: formData.quantity || null,
-        weight: formData.weight ? parseFloat(formData.weight) : null,
         colors: formData.colors || [],
         imageUrl,
       };
@@ -120,7 +117,6 @@ const CreateProduct = () => {
         category: "",
         brand: "",
         quantity: "",
-        weight: "",
         colors: [],
         imageUrl: "",
       });
@@ -144,7 +140,7 @@ const CreateProduct = () => {
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value.toLowerCase() });
+    setFormData({ ...formData, [name]: value });
   };
 
   return (
@@ -257,25 +253,13 @@ const CreateProduct = () => {
         </div>
 
         <div className="flex flex-wrap">
-          <label htmlFor="quantity" className="block text-sm font-medium">Quantidade</label>
+          <label htmlFor="quantity" className="block text-sm font-medium">Quantidade (ml/g)</label>
           <input
             type="text"
             id="quantity"
             name="quantity"
             className="p-2 border rounded-md w-full"
             value={formData.quantity}
-            onChange={handleInputChange}
-          />
-        </div>
-
-        <div className="flex flex-wrap">
-          <label htmlFor="weight" className="block text-sm font-medium">Peso</label>
-          <input
-            type="number"
-            id="weight"
-            name="weight"
-            className="p-2 border rounded-md w-full"
-            value={formData.weight}
             onChange={handleInputChange}
           />
         </div>

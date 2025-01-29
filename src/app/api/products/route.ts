@@ -19,13 +19,10 @@ export interface ProductData {
   category: string;
   brand?: string;
   quantity?: string;
-  weight?: number;
   colors?: string[];
   imageUrl: string;
 }
 
-
-// get all products
 export async function GET() {
   try {
     const products = await prisma.product.findMany();
@@ -62,7 +59,6 @@ export async function POST(request: Request) {
       category,
       brand,
       quantity,
-      weight,
       colors = [],
     }: ProductData = await request.json();
 
@@ -105,7 +101,6 @@ export async function POST(request: Request) {
           category,
           brand,
           quantity,
-          weight,
           colors,
           imageUrl
         },
@@ -125,7 +120,6 @@ export async function POST(request: Request) {
           category,
           brand,
           quantity,
-          weight,
           colors,
           imageUrl
         },

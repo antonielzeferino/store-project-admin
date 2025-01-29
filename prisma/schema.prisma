@@ -18,7 +18,6 @@ model Product {
   category           String
   brand              String? // marca do produto
   quantity           String? // Ex.: "200ml", "50g"
-  weight             Float? // Ex.: 500 (gramas)
   colors             String[] // Ex.: ["Vermelho", "Rosa"]
   imageUrl           String?
   createdAt          DateTime  @default(now())
