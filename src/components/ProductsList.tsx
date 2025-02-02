@@ -47,10 +47,11 @@ const ProductsList: React.FC<ProductsProps> = ({ viewMode, enableSearch = false 
 
   const filteredProducts = products.filter((product) => {
     if (!searchTerm.trim()) return true;
-    const lowerSearch = searchTerm;
+    const lowerSearch = searchTerm.toLowerCase();
+  
     return (
       product.name.toLowerCase().includes(lowerSearch) ||
-      product.category?.includes(lowerSearch) ||
+      product.category?.toLowerCase().includes(lowerSearch) ||
       product.tags?.some((tag) => tag.toLowerCase().includes(lowerSearch)) ||
       product.description.toLowerCase().includes(lowerSearch) ||
       product.brand?.toLowerCase().includes(lowerSearch) ||
